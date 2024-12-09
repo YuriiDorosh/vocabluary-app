@@ -26,4 +26,4 @@
 
 export PYTHONPATH=/app/src:$PYTHONPATH
 
-python ./src/manage.py runserver 0.0.0.0:8000
+bash -c "python ./src/manage.py migrate --noinput && python ./src/manage.py collectstatic --noinput && gunicorn src.config.wsgi:application --log-level debug --timeout 240 --bind 0.0.0.0:8000"

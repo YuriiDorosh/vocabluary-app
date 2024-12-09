@@ -10,6 +10,8 @@ services:
     volumes:
       - ../../src:/app/src 
       - ../../.env:/app/.env
+      - static_volume:/app/static
+      - media_volume:/media
     env_file:
       - ../../.env
     depends_on:
@@ -181,6 +183,10 @@ services:
       - backend
     environment:
       NGINX_PORT: ${NGINX_PORT}
+
+volumes:
+  static_volume:
+  media_volume:
 
 networks:
   backend:

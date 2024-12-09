@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./requirements/base-requirements.txt /app/
 RUN pip install --no-cache-dir -r base-requirements.txt
 
-COPY ./docker_compose/worker_1/entrypoint.sh /app/
+COPY ./docker_compose/worker_4/entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh
 
 COPY ../../src /app/src

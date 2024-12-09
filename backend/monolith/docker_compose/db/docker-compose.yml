@@ -15,6 +15,23 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
+  
+  backup:
+    image: postgres:15
+    container_name: postgres_backup
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./backups:/backups
+      - ./backup.sh:/backup.sh
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    command: sh -c " while true; do /backup.sh; sleep 86400; done"
 
 volumes:
   postgres_data:
