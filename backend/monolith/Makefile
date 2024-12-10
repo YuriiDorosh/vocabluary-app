@@ -107,13 +107,13 @@ migrate:
 	$(EXEC) $(APP_CONTAINER) ${MANAGE_PY} migrate
 
 superuser:
-	$(EXEC) $(APP_CONTAINER) ${MANAGE_PY} createsuperuser
+	$(EXEC) $(APP_CONTAINER) sh -c ' PYTHONPATH=/app/src:$$PYTHONPATH ${MANAGE_PY} createsuperuser'
 
 test:
 	$(EXEC) $(APP_CONTAINER) ${MANAGE_PY} test
 
 collectstatic:
-	$(EXEC) $(APP_CONTAINER) ${MANAGE_PY} collectstatic --noinput
+	$(EXEC) $(APP_CONTAINER) sh -c ' PYTHONPATH=/app/src:$$PYTHONPATH ${MANAGE_PY} collectstatic --noinput'
 
 logs-django:
 	$(LOGS) $(APP_CONTAINER)
