@@ -1,3 +1,6 @@
 docker_compose/db/backups/*
 docker_compose/db/data/*
 docker_compose/db/logs/*
+
+logs/django/*
+logs/nginx/*
