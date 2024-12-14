@@ -15,7 +15,19 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
-  
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    command: ["postgres", 
+          "-c", "wal_level=replica", 
+          "-c", "max_wal_senders=10", 
+          "-c", "hot_standby=on"]
+
   backup:
     image: postgres:15
     container_name: postgres_backup
@@ -33,8 +45,64 @@ services:
       - postgres
     command: sh -c " while true; do /backup.sh; sleep 86400; done"
 
+  replica1:
+    image: postgres:15
+    container_name: postgres_replica1
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: replication
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - replica1_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    command: >
+      sh -c "
+        until pg_isready -h postgres -U replication; do
+          sleep 2
+        done &&
+        rm -rf \$PGDATA/* &&
+        pg_basebackup -h postgres -D \$PGDATA -U replication -Fp -Xs -P -R &&
+        sed -i \"s/^#hot_standby.*/hot_standby = on/\" \$PGDATA/postgresql.conf &&
+        postgres
+      "
+
+  replica2:
+    image: postgres:15
+    container_name: postgres_replica2
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: replication
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - replica2_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    command: >
+      sh -c "
+        until pg_isready -h postgres -U replication; do
+          sleep 2
+        done &&
+        rm -rf \$PGDATA/* &&
+        pg_basebackup -h postgres -D \$PGDATA -U replication -Fp -Xs -P -R &&
+        sed -i \"s/^#hot_standby.*/hot_standby = on/\" \$PGDATA/postgresql.conf &&
+        postgres
+      "
+
 volumes:
   postgres_data:
+  replica1_data:
+  replica2_data:
 
 networks:
   backend:

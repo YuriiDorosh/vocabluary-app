@@ -24,6 +24,12 @@ services:
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/healthcheck/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   celery_worker_1:
     build:
@@ -161,6 +167,12 @@ services:
       - "6380:6379"
     networks:
     - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   nginx:
     build: 
@@ -173,6 +185,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - ../../logs/nginx:/var/log/nginx
       - ../../src:/app/src 
       - ../../.env:/app/.env
     env_file:
@@ -183,6 +196,12 @@ services:
       - backend
     environment:
       NGINX_PORT: ${NGINX_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
 volumes:
   static_volume:

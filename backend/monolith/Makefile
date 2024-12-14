@@ -11,7 +11,7 @@ REDIS_CONTAINER = redis
 NGINX_CONTAINER = nginx
 DB_CONTAINER = postgres
 DC = docker compose
-MANAGE_PY = python manage.py
+MANAGE_PY = python src/manage.py
 NETWORK_NAME = backend
 
 
