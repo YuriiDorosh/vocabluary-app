@@ -12,6 +12,7 @@ services:
       - ../../.env:/app/.env
       - static_volume:/app/static
       - media_volume:/media
+      - ../../logs/django:/app/logs/django
     env_file:
       - ../../.env
     depends_on:

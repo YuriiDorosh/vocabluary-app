@@ -77,6 +77,12 @@ down-all:
 	$(DC) -f docker_compose/pgadmin/docker-compose.yml down
 	$(DC) -f docker_compose/adminer/docker-compose.yml down
 
+down-all-volumes:
+	$(DC) -f docker_compose/db/docker-compose.yml down -v
+	$(DC) -f docker_compose/django/docker-compose.yml down -v
+	$(DC) -f docker_compose/pgadmin/docker-compose.yml down -v
+	$(DC) -f docker_compose/adminer/docker-compose.yml down -v
+
 down-all-2:
 	$(DC) -f docker_compose/db/docker-compose.yml \
 	      -f docker_compose/django/docker-compose.yml \
