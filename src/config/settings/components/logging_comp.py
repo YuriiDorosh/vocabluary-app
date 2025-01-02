@@ -53,6 +53,11 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+        'src.apps.common.middlewares': {
+            'handlers': ['console', 'debug_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
     "root": {
         "handlers": ["console", "error_file", "debug_file"],

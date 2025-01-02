@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
 
 LOCAL_APPS = [
-    
+    "src.apps.words.apps",    
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY + LOCAL_APPS
