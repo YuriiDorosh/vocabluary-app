@@ -76,8 +76,8 @@ services:
       PGUSER: replicator
       PGPASSWORD: ${POSTGRES_REPLICATION_PASSWORD}
       PGDATABASE: postgres
-    volumes:
-      - replica1_data:/var/lib/postgresql/data
+    # volumes:
+    #   - replica1_data:/var/lib/postgresql/data
     networks:
       - backend
     depends_on:
@@ -104,8 +104,8 @@ services:
       PGUSER: replicator
       PGPASSWORD: ${POSTGRES_REPLICATION_PASSWORD}
       PGDATABASE: postgres
-    volumes:
-      - replica2_data:/var/lib/postgresql/data
+    # volumes:
+    #   - replica2_data:/var/lib/postgresql/data
     networks:
       - backend
     depends_on:
@@ -118,8 +118,8 @@ services:
 # ---------- VOLUMES ----------
 volumes:
   postgres_data:
-  replica1_data:
-  replica2_data:
+  # replica1_data:
+  # replica2_data:
 
 # ---------- NETWORKS ----------
 networks:
