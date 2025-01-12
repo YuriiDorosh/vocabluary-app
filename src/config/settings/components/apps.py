@@ -20,6 +20,7 @@ THIRD_PARTY = [
     "django_extensions",
     "drf_yasg",
     "cachalot",
+    "elasticapm.contrib.django",
 ]
 
 sys.path.insert(0, os.path.join(BASE_DIR, "apps"))

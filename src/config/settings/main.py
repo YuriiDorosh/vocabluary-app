@@ -25,6 +25,7 @@ config_files = [
     "boilerplate.py",
     "celery.py",
     "database.py",
+    "elastic.py",
     "internationalization.py",
     "logging_comp.py",
     "media.py",
