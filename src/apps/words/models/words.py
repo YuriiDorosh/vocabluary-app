@@ -9,7 +9,7 @@ class Word(TimedAndUnixIdBaseModel):
         verbose_name=_("Word"),
         max_length=256,
         null=False,
-        blank=True,
+        blank=False,
     )
     definition = models.TextField(
         verbose_name=_("Definition"),
@@ -21,7 +21,7 @@ class Word(TimedAndUnixIdBaseModel):
         to=User,
         on_delete=models.CASCADE,
         null=False,
-        blank=True,        
+        blank=False,        
     )
     
     class Meta:

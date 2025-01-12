@@ -10,7 +10,7 @@ class WordTranslation(TimedAndUnixIdBaseModel):
         to="apps.words.models.Word",
         on_delete=models.CASCADE,
         null=False,
-        blank=True,
+        blank=False,
     )
     translation_text = models.TextField(
         verbose_name=_("Translation text"),
