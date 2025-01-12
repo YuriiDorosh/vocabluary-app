@@ -58,6 +58,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'elasticapm': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
     },
     "root": {
         "handlers": ["console", "error_file", "debug_file"],
