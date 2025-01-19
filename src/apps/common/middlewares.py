@@ -14,7 +14,16 @@ from django.utils.deprecation import MiddlewareMixin
 import json
 from typing import Callable
 import elasticapm
+import jwt
+from datetime import datetime
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser, User
+from channels.db import database_sync_to_async
+from channels.middleware import BaseMiddleware
+from django.db import close_old_connections
 
+
+ALGORITHM = "HS256"
 
 logger = logging.getLogger(__name__)
 
@@ -136,3 +145,62 @@ class ElasticApmMiddleware:
         except Resolver404:
             current_url = request.path
         return f"{request.method} {current_url}"
+    
+
+@database_sync_to_async
+def get_user(token):
+    """
+    Given a JWT token, return the associated User or AnonymousUser if invalid.
+    """
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.PyJWTError:
+        return AnonymousUser()
+
+    # Check token expiry
+    token_exp = datetime.fromtimestamp(payload.get("exp", 0))
+    if token_exp < datetime.utcnow():
+        return AnonymousUser()
+
+    # Retrieve user
+    try:
+        user = User.objects.get(id=payload["user_id"])
+        return user
+    except User.DoesNotExist:
+        return AnonymousUser()
+
+
+class TokenAuthMiddleware(BaseMiddleware):
+    """
+    Custom Channels middleware that extracts a JWT from the 'Authorization' header
+    and populates scope['user'] with the corresponding Django user.
+    """
+
+    async def __call__(self, scope, receive, send):
+        close_old_connections()
+
+        headers = dict(scope.get("headers", {}))  # headers is a list of (key, value) tuples
+        auth_header = headers.get(b"authorization", None)
+
+        token_key = None
+        if auth_header:
+            # Typically "Bearer <token>"
+            try:
+                auth_header_str = auth_header.decode("utf-8")
+                prefix, jwt_token = auth_header_str.split()
+                if prefix.lower() == "bearer":
+                    token_key = jwt_token
+            except ValueError:
+                # If the header isn’t in the expected "Bearer <token>" format
+                token_key = None
+
+        if token_key:
+            scope["user"] = await get_user(token_key)
+        else:
+            scope["user"] = AnonymousUser()
+
+        return await super().__call__(scope, receive, send)
+
+
+def JwtAuthMiddlewareStack(inner):
+    return TokenAuthMiddleware(inner)

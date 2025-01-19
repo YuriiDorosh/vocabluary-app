@@ -60,7 +60,7 @@ up-all-no-cache: check-network
 	$(MAKE) up-django-no-cache
 	$(MAKE) up-pgadmin
 	$(MAKE) up-adminer
-	$(DC) -f docker_compose/monitoring/docker-compose.yml $(ENV) up -d
+	$(MAKE) up-monitoring
 
 down-all:
 	$(MAKE) down-db
