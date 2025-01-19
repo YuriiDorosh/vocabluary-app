@@ -7,10 +7,11 @@ from src.apps.words.enums.languages import LanguageEnum
 class WordTranslation(TimedAndUnixIdBaseModel):
     word = models.ForeignKey(
         verbose_name=_("Word translation"),
-        to="apps.words.models.Word",
+        to="words.Word",
         on_delete=models.CASCADE,
         null=False,
         blank=False,
+        related_name="translations",
     )
     translation_text = models.TextField(
         verbose_name=_("Translation text"),

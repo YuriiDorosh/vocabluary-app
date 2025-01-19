@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class WordsConfig(AppConfig):
+class ChatsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'src.apps.words'
-    verbose_name = 'Words'
+    name = 'src.apps.chats'
+    verbose_name = 'Chats'
