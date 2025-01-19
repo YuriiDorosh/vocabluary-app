@@ -22,6 +22,7 @@ class Word(TimedAndUnixIdBaseModel):
         on_delete=models.CASCADE,
         null=False,
         blank=False,        
+        related_name="words",
     )
     
     class Meta:

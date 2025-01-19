@@ -139,10 +139,10 @@ logs-django:
 	$(LOGS) $(APP_CONTAINER)
 
 migrations:
-	$(EXEC) $(APP_CONTAINER) ${MANAGE_PY} makemigrations
+	$(EXEC) $(APP_CONTAINER) sh -c ' PYTHONPATH=/app/src:$$PYTHONPATH ${MANAGE_PY} makemigrations'
 
 migrate:
-	$(EXEC) $(APP_CONTAINER) ${MANAGE_PY} migrate
+	$(EXEC) $(APP_CONTAINER) sh -c ' PYTHONPATH=/app/src:$$PYTHONPATH ${MANAGE_PY} migrate'
 
 superuser:
 	$(EXEC) $(APP_CONTAINER) sh -c ' PYTHONPATH=/app/src:$$PYTHONPATH ${MANAGE_PY} createsuperuser'
