@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from src.apps.common.models import TimedAndUnixIdBaseModel
+from src.apps.words.enums.levels import LevelEnum
 
 
 class Word(TimedAndUnixIdBaseModel):
@@ -15,6 +16,12 @@ class Word(TimedAndUnixIdBaseModel):
         verbose_name=_("Definition"),
         null=True,
         blank=True,
+    )
+    level = models.CharField(
+        verbose_name=_("Word Level"),
+        max_length=2,
+        choices=LevelEnum.choices,
+        default=LevelEnum.Intermediate,
     )
     owner = models.ForeignKey(
         verbose_name=_("Created by this user"),

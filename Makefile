@@ -37,7 +37,7 @@ MAKE = make
         up-elastic up-kibana up-apm \
         down-elastic down-kibana down-apm \
         logs-elastic logs-kibana logs-apm \
-		test-apm
+		test-apm load-backup
 
 check-network:
 	@echo "Checking for network $(NETWORK_NAME)..."
@@ -120,6 +120,12 @@ down-db-volumes:
 
 logs-db:
 	$(LOGS) $(DB_CONTAINER)
+
+# make load-backup FILE=your_backup_file.dump
+load-backup:
+	@echo "Restoring backup $(FILE) into database..."
+	docker exec -i $(DB_CONTAINER) \
+	    pg_restore -U $(POSTGRES_USER) -d $(POSTGRES_DB) "/backups/$(FILE)"
 
 # Django
 up-django:
