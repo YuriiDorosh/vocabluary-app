@@ -69,6 +69,9 @@ class DBLoggingMiddleware(MiddlewareMixin):
         Extracts the SQL operation (SELECT, INSERT, UPDATE, DELETE, etc.)
         from the SQL statement.
         """
+        if not sql:
+        # Return something safe if `sql` is None or empty
+            return "NO-OP"
         sql = sql.strip().lower()
         if sql.startswith('select'):
             return 'SELECT'
@@ -95,8 +98,11 @@ class DBLoggingMiddleware(MiddlewareMixin):
         """
         Determines if a SQL query contains sensitive information.
         """
-        sensitive_keywords = ['password', 'credit_card', 'ssn']
+        if not sql:
+            return False
+
         sql_lower = sql.lower()
+        sensitive_keywords = ['password', 'credit_card', 'ssn']
         return any(keyword in sql_lower for keyword in sensitive_keywords)
 
 

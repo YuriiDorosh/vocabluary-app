@@ -18,7 +18,6 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
 
     async def disconnect(self, code):
         if hasattr(self, "room_subscribe"):
-            # Remove user from room on disconnect and notify others
             await self.remove_user_from_room(self.room_subscribe)
             await self.notify_users()
         await super().disconnect(code)
@@ -38,24 +37,20 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
     async def create_message(self, message, **kwargs):
         room = await self.get_room(pk=self.room_subscribe)
         user = self.scope["user"]
-        # Create a new message asynchronously
         await database_sync_to_async(MessageModel.objects.create)(
             room=room, user=user, text=message
         )
 
     @model_observer(MessageModel)
     async def message_activity(self, message, observer=None, **kwargs):
-        # Send JSON message to WebSocket client
         await self.send_json(message)
 
     @message_activity.groups_for_signal
     def message_activity_groups_for_signal(self, instance: MessageModel, **kwargs):
-        # Group messages by room for broadcasting
         yield f"room__{instance.room_id}"
 
     @message_activity.groups_for_consumer
     def message_activity_groups_for_consumer(self, room=None, **kwargs):
-        # Subscribe consumer to a room group
         if room is not None:
             yield f"room__{room}"
 
@@ -68,7 +63,6 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
         }
 
     async def notify_users(self):
-        # Notify connected clients in the room about current users
         room = await self.get_room(pk=self.room_subscribe)
         for group in self.groups:
             await self.channel_layer.group_send(
@@ -80,7 +74,6 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
             )
 
     async def update_users(self, event):
-        # Send updated user list to WebSocket
         await self.send(json.dumps({"usuarios": event["usuarios"]}))
 
     @database_sync_to_async

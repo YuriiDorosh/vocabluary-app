@@ -121,6 +121,7 @@ down-db-volumes:
 logs-db:
 	$(LOGS) $(DB_CONTAINER)
 
+# make load-backup FILE=your_backup_file.dump
 load-backup:
 	@echo "Restoring backup $(FILE) into database..."
 	docker exec -i $(DB_CONTAINER) \

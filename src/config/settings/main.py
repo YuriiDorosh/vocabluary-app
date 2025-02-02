@@ -36,3 +36,4 @@ config_files = [
 ]
 
 include(*(config_folder + file for file in config_files))
+GRAPPELLI_INDEX_DASHBOARD = 'src.config.dashboard.CustomIndexDashboard'

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -27,5 +27,6 @@ class HealthCheckAPIView(APIView):
             )
 
 urlpatterns = [
-    path("healthcheck/", HealthCheckAPIView.as_view(), name="healthcheck"),
+    path("v1/healthcheck/", HealthCheckAPIView.as_view(), name="healthcheck"),
+    path("v1/", include("src.api.v1.urls")),
 ]
