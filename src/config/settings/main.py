@@ -25,7 +25,6 @@ config_files = [
     "boilerplate.py",
     "celery.py",
     "database.py",
-    "elastic.py",
     "internationalization.py",
     "logging_comp.py",
     "media.py",
@@ -35,5 +34,9 @@ config_files = [
     "timezone.py",
 ]
 
+if env('USE_ELASTIC') == 1:
+    GRAPPELLI_INDEX_DASHBOARD = 'src.config.dashboard.CustomIndexDashboard'
+    config_files.append("elastic.py")
+
 include(*(config_folder + file for file in config_files))
-GRAPPELLI_INDEX_DASHBOARD = 'src.config.dashboard.CustomIndexDashboard'
+

@@ -69,6 +69,24 @@ down-all:
 	$(MAKE) down-adminer
 	$(MAKE) down-monitoring
 
+up-all-without-monitoring: check-network
+	$(MAKE) up-db
+	$(MAKE) up-django
+	$(MAKE) up-pgadmin
+	$(MAKE) up-adminer
+
+up-all-no-cache-without-monitoring: check-network
+	$(MAKE) up-db-no-cache
+	$(MAKE) up-django-no-cache
+	$(MAKE) up-pgadmin
+	$(MAKE) up-adminer
+
+down-all-without-monitoring:
+	$(MAKE) down-db
+	$(MAKE) down-django
+	$(MAKE) down-pgadmin
+	$(MAKE) down-adminer
+
 down-all-volumes:
 	$(MAKE) down-db-volumes
 	$(MAKE) down-django-volumes

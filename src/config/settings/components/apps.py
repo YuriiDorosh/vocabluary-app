@@ -2,7 +2,10 @@ import os
 import sys
 
 from config.settings.components.boilerplate import BASE_DIR
+import environ
 
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -24,13 +27,17 @@ THIRD_PARTY = [
     "drf_yasg",
     # Cache
     "cachalot",
-    # Elastic
-    "elasticapm.contrib.django",
     # Ninja
     "ninja_extra",
     "ninja_jwt",
     # "ninja-schema",
 ]
+
+if env("USE_ELASTIC") == 1:
+    THIRD_PARTY += [
+        # Elastic
+        "elasticapm.contrib.django",
+    ]
 
 sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
