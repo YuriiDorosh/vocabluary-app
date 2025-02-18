@@ -17,6 +17,8 @@ DB_CONTAINER = postgres
 ELASTIC_CONTAINER = elasticsearch
 KIBANA_CONTAINER = kibana
 APM_CONTAINER = apm-server
+MONGO_CONTAINER = mongodb
+MONGO_EXPRESS_CONTAINER = mongo-express
 
 NETWORK_NAME = backend
 
@@ -54,6 +56,7 @@ up-all: check-network
 	$(MAKE) up-pgadmin
 	$(MAKE) up-adminer
 	$(MAKE) up-monitoring
+	$(MAKE) up-mongo
 
 up-all-no-cache: check-network
 	$(MAKE) up-db-no-cache
@@ -61,6 +64,7 @@ up-all-no-cache: check-network
 	$(MAKE) up-pgadmin
 	$(MAKE) up-adminer
 	$(MAKE) up-monitoring
+	$(MAKE) up-mongo
 
 down-all:
 	$(MAKE) down-db
@@ -68,24 +72,28 @@ down-all:
 	$(MAKE) down-pgadmin
 	$(MAKE) down-adminer
 	$(MAKE) down-monitoring
+	$(MAKE) down-mongo
 
 up-all-without-monitoring: check-network
 	$(MAKE) up-db
 	$(MAKE) up-django
 	$(MAKE) up-pgadmin
 	$(MAKE) up-adminer
+	$(MAKE) up-mongo
 
 up-all-no-cache-without-monitoring: check-network
 	$(MAKE) up-db-no-cache
 	$(MAKE) up-django-no-cache
 	$(MAKE) up-pgadmin
 	$(MAKE) up-adminer
+	$(MAKE) up-mongo
 
 down-all-without-monitoring:
 	$(MAKE) down-db
 	$(MAKE) down-django
 	$(MAKE) down-pgadmin
 	$(MAKE) down-adminer
+	$(MAKE) down-mongo
 
 down-all-volumes:
 	$(MAKE) down-db-volumes
@@ -93,6 +101,7 @@ down-all-volumes:
 	$(MAKE) down-pgadmin-volumes
 	$(MAKE) down-adminer-volumes
 	$(MAKE) down-monitoring-volumes
+	$(MAKE) down-mongo-volumes
 
 up-monitoring:
 	$(DC) -f docker_compose/elastic/docker-compose.yml \
@@ -252,3 +261,10 @@ down-apm:
 
 logs-apm:
 	$(LOGS) $(APM_CONTAINER)
+
+
+up-mongo:
+	$(DC) -f docker_compose/mongo/docker-compose.yml $(ENV) up -d
+
+down-mongo:
+	$(DC) -f docker_compose/mongo/docker-compose.yml down

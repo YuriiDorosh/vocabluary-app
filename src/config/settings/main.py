@@ -29,6 +29,7 @@ config_files = [
     "logging_comp.py",
     "media.py",
     "middleware.py",
+    "mongo.py",
     "static.py",
     "templates.py",
     "timezone.py",
