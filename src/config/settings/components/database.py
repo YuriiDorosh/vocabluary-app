@@ -6,7 +6,6 @@ env = environ.Env()
 environ.Env.read_env(BASE_DIR / '.env')
 
 if env('USE_REPLICA') == 1:
-    print("*!@#$#" * 1000)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',

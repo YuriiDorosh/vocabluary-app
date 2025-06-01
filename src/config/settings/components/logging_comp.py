@@ -1,5 +1,10 @@
 import os
 from src.config.settings.components.boilerplate import BASE_DIR
+import environ
+
+
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')
 
 LOGGING_DIR_DJANGO = BASE_DIR.parent / "logs" / "django"
 if not LOGGING_DIR_DJANGO.exists():
@@ -58,14 +63,23 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'elasticapm': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
     },
     "root": {
         "handlers": ["console", "error_file", "debug_file"],
         "level": "ERROR",
     },
 }
+
+if env('USE_ELASTIC') == 1:
+    LOGGING['loggers']['elasticapm'] = {
+        'level': 'DEBUG',
+        'handlers': ['console'],
+        'propagate': False,
+    }
+        
+        
+        # 'elasticapm': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['console'],
+        #     'propagate': False,
+        # },
