@@ -29,5 +29,5 @@ export PYTHONPATH=/app/src:$PYTHONPATH
 bash -c "
     python ./src/manage.py migrate --noinput && \
     python ./src/manage.py collectstatic --noinput && \
-    daphne -b 0.0.0.0 -p 8000 src.config.asgi:application
+    uvicorn src.config.asgi:application --host 0.0.0.0 --port 8000 --reload
 "
