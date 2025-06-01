@@ -55,6 +55,11 @@ up-all: check-network
 	$(MAKE) up-adminer
 	$(MAKE) up-monitoring
 
+up-all-no-monitoring-no-pgadmin: check-network
+	$(MAKE) up-db
+	$(MAKE) up-django
+	$(MAKE) up-adminer
+
 up-all-no-cache: check-network
 	$(MAKE) up-db-no-cache
 	$(MAKE) up-django-no-cache
@@ -62,12 +67,22 @@ up-all-no-cache: check-network
 	$(MAKE) up-adminer
 	$(MAKE) up-monitoring
 
+up-all-no-cache-no-monitoring-no-pgadmin: check-network
+	$(MAKE) up-db-no-cache
+	$(MAKE) up-django-no-cache
+	$(MAKE) up-adminer
+
 down-all:
 	$(MAKE) down-db
 	$(MAKE) down-django
 	$(MAKE) down-pgadmin
 	$(MAKE) down-adminer
 	$(MAKE) down-monitoring
+
+
+down-all-no-monitoring-no-pgadmin:
+	$(MAKE) down-db
+	$(MAKE) down-django
 
 up-all-without-monitoring: check-network
 	$(MAKE) up-db
